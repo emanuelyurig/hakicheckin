@@ -187,7 +187,7 @@ export default function StudentPage() {
                jiu-Jitsu
               </span>
               <span className="text-gray-400 text-[10px] font-bold uppercase tracking-wider">
-                {activeClass.horario}
+                {activeClass.horario} - {activeClass.data}
               </span>
             </div>
 
@@ -231,7 +231,7 @@ export default function StudentPage() {
                   htmlFor="nomeCompleto" 
                   className="text-[10px] text-gray-400 font-bold uppercase ml-1 tracking-wider block"
                 >
-                  Seu Nome Completo
+                  Digite seu nome
                 </label>
                 
                 <input
