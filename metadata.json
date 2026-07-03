@@ -1,0 +1,6 @@
+{
+  "name": "Presença Jiu-Jitsu",
+  "description": "Plataforma de controle de confirmação de presença em tempo real para aulas de academia de Jiu-Jitsu.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
