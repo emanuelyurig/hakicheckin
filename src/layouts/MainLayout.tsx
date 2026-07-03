@@ -2,6 +2,7 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Shield, LayoutDashboard, UserCheck, Database, Info } from 'lucide-react';
 import { isMock } from '../lib/supabase';
+import logo from "@/assets/logo.png"; 
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
   const location = useLocation();
@@ -21,9 +22,16 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
             to="/" 
             className="flex items-center gap-3 group transition-transform active:scale-98"
           >
-            <div className="w-10 h-10 rounded-xl bg-orange-600 flex items-center justify-center text-black font-black shadow-[0_0_20px_rgba(225,29,72,0.35)] group-hover:shadow-[0_0_25px_rgba(225,29,72,0.55)] transition-all">
+            {/* <div className="w-10 h-10 rounded-xl bg-orange-600 flex items-center justify-center text-black font-black shadow-[0_0_20px_rgba(225,29,72,0.35)] group-hover:shadow-[0_0_25px_rgba(225,29,72,0.55)] transition-all">
               <Shield className="w-5.5 h-5.5 text-white" />
-            </div>
+            </div> */}
+
+            <img
+    src={logo}
+    alt="HAKI School"
+    className="h-12 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
+  />
+
             <div>
               <span className="font-black text-xl tracking-tighter text-white font-sans block leading-none italic">
                 HAKI <span className="text-orange-600">SCHOOL</span>
