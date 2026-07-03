@@ -184,7 +184,7 @@ export default function StudentPage() {
           <div className="mt-8 bg-[#1A1A1A] rounded-2xl p-4.5 border border-[#333]">
             <div className="flex justify-between items-start mb-3">
               <span className="bg-orange-600 text-white text-[9px] font-black px-2 py-0.5 rounded tracking-wider uppercase animate-pulse">
-                AO VIVO
+               jiu-Jitsu
               </span>
               <span className="text-gray-400 text-[10px] font-bold uppercase tracking-wider">
                 {activeClass.horario}
