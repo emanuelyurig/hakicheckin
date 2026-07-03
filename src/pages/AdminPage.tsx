@@ -345,7 +345,7 @@ export default function AdminPage() {
                   disabled={saveClassMutation.isPending}
                   {...register('tipo')}
                   className={`w-full bg-[#0A0A0A] text-white placeholder-zinc-700 rounded-xl px-4 py-3.5 text-sm font-bold border focus:outline-none transition-all ${
-                    errors.tipo ? 'border-orange-500/60 focus:border-orange-500 focus:ring-1 focus:ring-red-500' : 'border-[#333] focus:border-orange-600 focus:ring-1 focus:ring-red-600'
+                    errors.tipo ? 'border-orange-500/60 focus:border-orange-500 focus:ring-1 focus:ring-orange-500' : 'border-[#333] focus:border-orange-600 focus:ring-1 focus:ring-orange-600'
                   }`}
                 />
                 {errors.tipo && (
@@ -364,7 +364,7 @@ export default function AdminPage() {
                     disabled={saveClassMutation.isPending}
                     {...register('data')}
                     className={`w-full bg-[#0A0A0A] text-white rounded-xl px-4 py-3.5 text-sm font-bold border focus:outline-none transition-all ${
-                      errors.data ? 'border-orange-500/60 focus:border-orange-500 focus:ring-1 focus:ring-red-500' : 'border-[#333] focus:border-orange-600 focus:ring-1 focus:ring-red-600'
+                      errors.data ? 'border-orange-500/60 focus:border-orange-500 focus:ring-1 focus:ring-orange-500' : 'border-[#333] focus:border-orange-600 focus:ring-1 focus:ring-orange-600'
                     }`}
                   />
                   {errors.data && (
@@ -382,7 +382,7 @@ export default function AdminPage() {
                     disabled={saveClassMutation.isPending}
                     {...register('horario')}
                     className={`w-full bg-[#0A0A0A] text-white placeholder-zinc-700 rounded-xl px-4 py-3.5 text-sm font-bold border focus:outline-none transition-all ${
-                      errors.horario ? 'border-orange-500/60 focus:border-orange-500 focus:ring-1 focus:ring-red-500' : 'border-[#333] focus:border-orange-600 focus:ring-1 focus:ring-red-600'
+                      errors.horario ? 'border-orange-500/60 focus:border-orange-500 focus:ring-1 focus:ring-orange-500' : 'border-[#333] focus:border-orange-600 focus:ring-1 focus:ring-orange-600'
                     }`}
                   />
                   {errors.horario && (
@@ -401,7 +401,7 @@ export default function AdminPage() {
                   placeholder="Ex: Mestre Helio Gracie"
                   disabled={saveClassMutation.isPending}
                   {...register('professor')}
-                  className="w-full bg-[#0A0A0A] text-white placeholder-zinc-700 rounded-xl px-4 py-3.5 text-sm font-bold border border-[#333] focus:border-orange-600 focus:outline-none focus:ring-1 focus:ring-red-600 transition-all"
+                  className="w-full bg-[#0A0A0A] text-white placeholder-zinc-700 rounded-xl px-4 py-3.5 text-sm font-bold border border-[#333] focus:border-orange-600 focus:outline-none focus:ring-1 focus:ring-orange-600 transition-all"
                 />
               </div>
 
@@ -416,7 +416,7 @@ export default function AdminPage() {
                   disabled={saveClassMutation.isPending}
                   {...register('limite_vagas')}
                   className={`w-full bg-[#0A0A0A] text-white placeholder-zinc-700 rounded-xl px-4 py-3.5 text-sm font-bold border focus:outline-none transition-all ${
-                    errors.limite_vagas ? 'border-orange-500/60 focus:border-orange-500 focus:ring-1 focus:ring-red-500' : 'border-[#333] focus:border-orange-600 focus:ring-1 focus:ring-red-600'
+                    errors.limite_vagas ? 'border-orange-500/60 focus:border-orange-500 focus:ring-1 focus:ring-orange-500' : 'border-[#333] focus:border-orange-600 focus:ring-1 focus:ring-orange-600'
                   }`}
                 />
                 {errors.limite_vagas && (

@@ -123,7 +123,7 @@ export default function StudentPage() {
     return (
       <div className="flex-1 flex flex-col items-center justify-center bg-[#09090b] p-6">
         <div className="relative">
-          <div className="w-16 h-16 rounded-full border-4 border-zinc-800 border-t-red-600 animate-spin" />
+          <div className="w-16 h-16 rounded-full border-4 border-zinc-800 border-t-orange-600 animate-spin" />
           <Shield className="w-6 h-6 text-orange-600 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
         </div>
         <p className="mt-4 text-zinc-400 font-mono text-sm tracking-wider animate-pulse">
@@ -253,8 +253,8 @@ export default function StudentPage() {
                   }}
                   className={`w-full bg-[#0A0A0A] border rounded-xl px-4 py-3.5 text-sm focus:outline-none transition-all text-white placeholder-zinc-700 ${
                     errors.nomeCompleto 
-                      ? 'border-orange-500/80 focus:border-orange-500 focus:ring-1 focus:ring-red-500' 
-                      : 'border-[#333] focus:border-orange-600 focus:ring-1 focus:ring-red-600'
+                      ? 'border-orange-500/80 focus:border-orange-500 focus:ring-1 focus:ring-orange-500' 
+                      : 'border-[#333] focus:border-orange-600 focus:ring-1 focus:ring-orange-600'
                   }`}
                 />
 
@@ -281,7 +281,7 @@ export default function StudentPage() {
                   id="btn-confirmar"
                   type="submit"
                   disabled={confirmMutation.isPending}
-                  className="w-full bg-orange-600 hover:bg-orange-700 disabled:bg-zinc-800 disabled:text-zinc-500 text-white font-black py-4 rounded-xl shadow-lg shadow-red-950/20 active:scale-[0.98] transition-all uppercase tracking-wider text-xs sm:text-sm cursor-pointer"
+                  className="w-full bg-orange-600 hover:bg-orange-700 disabled:bg-zinc-800 disabled:text-zinc-500 text-white font-black py-4 rounded-xl shadow-lg shadow-orange-950/20 active:scale-[0.98] transition-all uppercase tracking-wider text-xs sm:text-sm cursor-pointer"
                 >
                   {confirmMutation.isPending ? 'Confirmando...' : 'Confirmar Presença'}
                 </button>

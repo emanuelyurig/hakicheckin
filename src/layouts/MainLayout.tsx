@@ -11,7 +11,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
   return (
     <div className="min-h-screen bg-[#0A0A0A] text-white flex flex-col font-sans selection:bg-orange-600 selection:text-white">
       {/* Decorative top bar */}
-      <div className="h-1.5 bg-gradient-to-r from-red-600 via-rose-600 to-red-700 w-full" />
+      <div className="h-1.5 bg-gradient-to-r from-orange-600 via-rose-600 to-orange-700 w-full" />
 
       {/* Header */}
       <header className="border-b-2 border-[#222] bg-[#0A0A0A] sticky top-0 z-40 backdrop-blur-md">
@@ -48,7 +48,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
               to="/"
               className={`px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all duration-200 flex items-center gap-2 ${
                 !isAdmin
-                  ? 'bg-orange-600 text-white shadow-lg shadow-red-950/20'
+                  ? 'bg-orange-600 text-white shadow-lg shadow-orange-950/20'
                   : 'text-zinc-400 hover:text-white hover:bg-zinc-900 border border-transparent hover:border-zinc-800'
               }`}
             >
