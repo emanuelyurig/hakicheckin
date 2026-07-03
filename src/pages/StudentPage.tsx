@@ -27,6 +27,12 @@ export default function StudentPage() {
   const queryClient = useQueryClient();
   const nameInputRef = useRef<HTMLInputElement | null>(null);
 
+  const formatDateBR = (date: string) => {
+  return new Intl.DateTimeFormat("pt-BR", {
+    timeZone: "UTC",
+  }).format(new Date(date));
+};
+
   // 1. Fetch active class
   const { 
     data: activeClass, 
@@ -184,10 +190,10 @@ export default function StudentPage() {
           <div className="mt-8 bg-[#1A1A1A] rounded-2xl p-4.5 border border-[#333]">
             <div className="flex justify-between items-start mb-3">
               <span className="bg-orange-600 text-white text-[9px] font-black px-2 py-0.5 rounded tracking-wider uppercase animate-pulse">
-                JIU-JITSU
+               jiu-Jitsu
               </span>
               <span className="text-gray-400 text-[10px] font-bold uppercase tracking-wider">
-                {activeClass.horario}
+               {activeClass.horario} - {formatDateBR(activeClass.data)}
               </span>
             </div>
 
@@ -231,7 +237,7 @@ export default function StudentPage() {
                   htmlFor="nomeCompleto" 
                   className="text-[10px] text-gray-400 font-bold uppercase ml-1 tracking-wider block"
                 >
-                  Seu Nome Completo
+                  Digite seu nome
                 </label>
                 
                 <input
