@@ -12,7 +12,6 @@ import {
 import { dbService } from '../services/db';
 import { useToast } from '../contexts/ToastContext';
 import { useRealtime } from '../hooks/useRealtime';
-  import AdminLogin from "../pages/AdminLogin";
 
 // Validation Schema using Zod
 const classSchema = z.object({
@@ -199,16 +198,6 @@ export default function AdminPage() {
   // Statistics
   const totalConfirmados = presencas.length;
   const vagasRestantes = activeClass ? Math.max(0, activeClass.limite_vagas - totalConfirmados) : 0;
-
-
-
-const [authenticated, setAuthenticated] = useState(
-  sessionStorage.getItem("admin-auth") === "true"
-);
-
-if (!authenticated) {
-  return <AdminLogin onSuccess={() => setAuthenticated(true)} />;
-}
 
   return (
     <div className="flex-grow bg-[#0A0A0A] py-10 px-4 sm:px-6 lg:px-8 print:bg-white print:text-black">
