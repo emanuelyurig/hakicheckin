@@ -27,6 +27,12 @@ export default function StudentPage() {
   const queryClient = useQueryClient();
   const nameInputRef = useRef<HTMLInputElement | null>(null);
 
+  const formatDateBR = (date: string) => {
+  return new Intl.DateTimeFormat("pt-BR", {
+    timeZone: "UTC",
+  }).format(new Date(date));
+};
+
   // 1. Fetch active class
   const { 
     data: activeClass, 
@@ -187,7 +193,7 @@ export default function StudentPage() {
                jiu-Jitsu
               </span>
               <span className="text-gray-400 text-[10px] font-bold uppercase tracking-wider">
-                {activeClass.horario} - {activeClass.data}
+               {activeClass.horario} - {formatDateBR(activeClass.data)}
               </span>
             </div>
 
