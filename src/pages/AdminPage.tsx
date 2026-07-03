@@ -12,8 +12,7 @@ import {
 import { dbService } from '../services/db';
 import { useToast } from '../contexts/ToastContext';
 import { useRealtime } from '../hooks/useRealtime';
-  import AdminLogin from "../components/AdminLogin";
-import { useState } from "react";
+  import AdminLogin from "../pages/AdminLogin";
 
 // Validation Schema using Zod
 const classSchema = z.object({
