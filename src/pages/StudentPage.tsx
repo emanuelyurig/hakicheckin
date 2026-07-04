@@ -206,7 +206,7 @@ export default function StudentPage() {
                 Prof. {activeClass.professor}
               </p>
             ) : (
-              <p className="text-gray-500 text-xs font-semibold mb-4">
+              <p className="text-gray-500 text-xs font-semibold">
                HAKI • Aula do Dia
               </p>
             )}
