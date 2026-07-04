@@ -89,7 +89,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
           </div>
 
           {/* Connection Status Indicator */}
-          <div className="flex items-center gap-2 bg-[#111] px-4 py-2 rounded-full border border-[#222]">
+          {/* <div className="flex items-center gap-2 bg-[#111] px-4 py-2 rounded-full border border-[#222]">
             <Database className={`w-3.5 h-3.5 ${isMock ? 'text-amber-500' : 'text-rose-500'}`} />
             <span className="text-[9px] font-black tracking-[0.15em] text-zinc-400 uppercase">
               STATUS: {isMock ? (
@@ -98,7 +98,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
                 <span className="text-rose-500">SUPABASE CLOUD</span>
               )}
             </span>
-          </div>
+          </div> */}
         </div>
       </footer>
     </div>
