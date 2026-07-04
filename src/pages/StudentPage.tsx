@@ -202,7 +202,7 @@ export default function StudentPage() {
             </h2>
             
             {activeClass.professor ? (
-              <p className="text-gray-500 text-xs font-semibold mb-4">
+              <p className="text-gray-500 text-xs font-semibold">
                 Prof. {activeClass.professor}
               </p>
             ) : (
