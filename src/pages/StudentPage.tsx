@@ -297,7 +297,7 @@ export default function StudentPage() {
         </motion.div>
 
         {/* RECENT ACTIVITY LOG */}
-        <AnimatePresence>
+        {/* <AnimatePresence>
           {presencas.length > 0 && (
             <motion.div
               initial={{ opacity: 0, y: 10 }}
@@ -323,7 +323,7 @@ export default function StudentPage() {
               </div>
             </motion.div>
           )}
-        </AnimatePresence>
+        </AnimatePresence> */}
         
       </div>
     </div>
