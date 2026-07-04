@@ -212,7 +212,7 @@ export default function StudentPage() {
             )}
 
             {/* STATS COUNT GRID (bg-black/40 rounded-lg p-2 border border-[#222]) */}
-            <div className="grid grid-cols-2 gap-2.5">
+            {/* <div className="grid grid-cols-2 gap-2.5">
               <div className="bg-black/40 rounded-xl p-3 border border-[#222] text-center">
                 <div className="text-[9px] text-gray-500 uppercase font-black tracking-wider">Confirmados</div>
                 <div className="text-lg font-black text-white mt-0.5">
@@ -226,7 +226,7 @@ export default function StudentPage() {
                   {isLoadingPresencas ? '...' : vagasRestantes}
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
 
           {/* INPUT FORM */}
