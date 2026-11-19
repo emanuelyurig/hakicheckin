@@ -21,7 +21,7 @@ import {
   Minus,
   Bell,
 } from 'lucide-react';
-import { soundEngine } from '../assets/soundEngine';
+import { soundEngine } from '../../assets/soundEngine';
 
 type PresetId = 'sparring' | 'drill' | 'hiit' | 'custom';
 type TimerPhase = 'work' | 'rest';
