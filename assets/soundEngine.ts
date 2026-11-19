@@ -192,13 +192,13 @@ class SoundEngine {
   }
 
   /**
-   * Synthesizes one longer, louder hardwood clapper snap (UFC 10-second warning block)
+   * Synthesizes one sharp, high-pitched, very loud hardwood clapper snap (UFC 10-second warning block)
    */
   private triggerWoodClapperSnap(
     ctx: AudioContext,
     startTime: number,
     pitchShift = 1.0,
-    level = 0.95
+    level = 1.65
   ): void {
     const out = this.getOutputNode(ctx);
 
@@ -207,11 +207,11 @@ class SoundEngine {
       bus.gain.setValueAtTime(level * gainScale, t);
       bus.connect(out);
 
-      // Longer hardwood resonant formants driven by broadband noise
+      // Higher-pitched, louder hardwood resonant formants driven by broadband noise
       const formants = [
-        { freq: 1120 * pitchShift, q: 8.5, gain: 1.0, dur: 0.095 },
-        { freq: 2240 * pitchShift, q: 9.5, gain: 0.95, dur: 0.075 },
-        { freq: 3950 * pitchShift, q: 4.0, gain: 0.72, dur: 0.045 },
+        { freq: 1650 * pitchShift, q: 9.0, gain: 1.35, dur: 0.095 },
+        { freq: 3100 * pitchShift, q: 10.0, gain: 1.3, dur: 0.075 },
+        { freq: 5200 * pitchShift, q: 4.5, gain: 0.95, dur: 0.045 },
       ];
 
       formants.forEach(({ freq, q, gain, dur }) => {
@@ -235,29 +235,29 @@ class SoundEngine {
         noise.stop(t + dur + 0.015);
       });
 
-      // Deeper, longer wood block knock thud
+      // Higher-pitched, punchier wood block knock
       const knock = ctx.createOscillator();
       const knockEnv = ctx.createGain();
       knock.type = 'triangle';
-      knock.frequency.setValueAtTime(340 * pitchShift, t);
-      knock.frequency.exponentialRampToValueAtTime(210 * pitchShift, t + 0.065);
+      knock.frequency.setValueAtTime(540 * pitchShift, t);
+      knock.frequency.exponentialRampToValueAtTime(340 * pitchShift, t + 0.06);
 
-      knockEnv.gain.setValueAtTime(0.55, t);
-      knockEnv.gain.exponentialRampToValueAtTime(0.0001, t + 0.075);
+      knockEnv.gain.setValueAtTime(0.85, t);
+      knockEnv.gain.exponentialRampToValueAtTime(0.0001, t + 0.07);
 
       knock.connect(knockEnv);
       knockEnv.connect(bus);
       knock.start(t);
-      knock.stop(t + 0.085);
+      knock.stop(t + 0.08);
     };
 
-    // Direct snap + longer gym tail reflection
+    // Direct snap + gym tail reflection
     playCrack(startTime, 1.0);
     playCrack(startTime + 0.055, 0.34);
   }
 
   /**
-   * UFC-style 10-second warning: 3 loud, extended hardwood clapper slams ("CLACK-CLACK-CLACK!")
+   * UFC-style 10-second warning: 3 loud, high-pitched, well-spaced hardwood clapper slams
    */
   public playTenSecondsAlert(muted: boolean): void {
     if (muted) return;
@@ -265,9 +265,9 @@ class SoundEngine {
     if (!ctx) return;
 
     const now = ctx.currentTime;
-    this.triggerWoodClapperSnap(ctx, now, 1.0, 1.0);
-    this.triggerWoodClapperSnap(ctx, now + 0.21, 0.96, 0.96);
-    this.triggerWoodClapperSnap(ctx, now + 0.42, 1.03, 1.0);
+    this.triggerWoodClapperSnap(ctx, now, 1.0, 1.65);
+    this.triggerWoodClapperSnap(ctx, now + 0.36, 0.97, 1.6);
+    this.triggerWoodClapperSnap(ctx, now + 0.72, 1.03, 1.7);
   }
 
   /**
