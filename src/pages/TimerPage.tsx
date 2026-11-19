@@ -605,19 +605,7 @@ export default function JiuJitsuTimerPage() {
 
         {/* Header */}
         <header className="flex items-center justify-between gap-3 mb-5">
-          <div className="min-w-0">
-            <h1 className="leading-none flex items-baseline gap-1.5">
-              <span className="text-orange-600 font-black text-2xl sm:text-3xl tracking-tighter italic">
-                HAKI
-              </span>
-              <span className="text-white font-black text-2xl sm:text-3xl tracking-tighter">
-                SCHOOL
-              </span>
-            </h1>
-            <p className="text-[10px] text-gray-500 tracking-[0.2em] uppercase font-bold mt-1">
-              Brazilian Jiu-Jitsu
-            </p>
-          </div>
+          
 
           <div className="flex items-center gap-2 shrink-0">
             <button
