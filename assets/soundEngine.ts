@@ -1,7 +1,7 @@
 /**
  * Web Audio API sound synthesizer for HAKI SCHOOL Jiu-Jitsu Timer.
  * Synthesizes an authentic steel boxing ring bell, UFC-style hardwood 10-second clapper,
- * sharp bomb-style per-second rest ticks, and final countdown cues with zero external audio files.
+ * high-pitched rest ticks (same synth as countdown), and final countdown cues with zero external audio files.
  */
 
 class SoundEngine {
@@ -33,14 +33,14 @@ class SoundEngine {
   private getOutputNode(ctx: AudioContext): AudioNode {
     if (!this.masterBus || !this.masterGain || this.masterBus.context !== ctx) {
       const comp = ctx.createDynamicsCompressor();
-      comp.threshold.setValueAtTime(-6, ctx.currentTime);
-      comp.knee.setValueAtTime(8, ctx.currentTime);
-      comp.ratio.setValueAtTime(6, ctx.currentTime);
+      comp.threshold.setValueAtTime(-5, ctx.currentTime);
+      comp.knee.setValueAtTime(6, ctx.currentTime);
+      comp.ratio.setValueAtTime(8, ctx.currentTime);
       comp.attack.setValueAtTime(0.001, ctx.currentTime);
-      comp.release.setValueAtTime(0.14, ctx.currentTime);
+      comp.release.setValueAtTime(0.12, ctx.currentTime);
 
       const boost = ctx.createGain();
-      boost.gain.setValueAtTime(1.65, ctx.currentTime);
+      boost.gain.setValueAtTime(1.85, ctx.currentTime);
 
       comp.connect(boost);
       boost.connect(ctx.destination);
@@ -85,34 +85,34 @@ class SoundEngine {
   }
 
   /**
-   * Synthesizes a loud, resonant steel-dome boxing ring bell strike.
-   * Uses dense beating metallic partials, FM clang transient, and heavy iron hammer hit.
+   * Synthesizes a very loud, high-pitched steel-dome boxing ring bell strike.
+   * Uses dense beating metallic partials, bright FM clang transient, and heavy iron hammer hit.
    */
   private triggerBoxingBellStrike(
     ctx: AudioContext,
     startTime: number,
     sustain = 2.2,
-    level = 0.88
+    level = 1.45
   ): void {
     const out = this.getOutputNode(ctx);
     const strikeBus = ctx.createGain();
     strikeBus.gain.setValueAtTime(level, startTime);
     strikeBus.connect(out);
 
-    // Chrome-steel boxing bell dome partials (~820 Hz body + bright metallic ring partials)
-    const baseFreq = 820;
+    // Higher-pitched chrome-steel boxing bell dome partials (~1180 Hz body + bright metallic ring)
+    const baseFreq = 1180;
     const partials = [
-      { ratio: 0.72, gain: 0.28, decay: sustain * 0.9 },
-      { ratio: 1.0, gain: 0.45, decay: sustain },
-      { ratio: 1.009, gain: 0.38, decay: sustain * 0.95 },
-      { ratio: 1.49, gain: 0.32, decay: sustain * 0.86 },
-      { ratio: 1.507, gain: 0.26, decay: sustain * 0.82 },
-      { ratio: 2.08, gain: 0.34, decay: sustain * 0.74 },
-      { ratio: 2.106, gain: 0.26, decay: sustain * 0.7 },
-      { ratio: 2.84, gain: 0.22, decay: sustain * 0.56 },
-      { ratio: 3.66, gain: 0.17, decay: sustain * 0.42 },
-      { ratio: 4.52, gain: 0.12, decay: sustain * 0.28 },
-      { ratio: 5.75, gain: 0.08, decay: sustain * 0.18 },
+      { ratio: 0.72, gain: 0.34, decay: sustain * 0.9 },
+      { ratio: 1.0, gain: 0.58, decay: sustain },
+      { ratio: 1.008, gain: 0.5, decay: sustain * 0.95 },
+      { ratio: 1.49, gain: 0.44, decay: sustain * 0.86 },
+      { ratio: 1.506, gain: 0.36, decay: sustain * 0.82 },
+      { ratio: 2.08, gain: 0.45, decay: sustain * 0.74 },
+      { ratio: 2.104, gain: 0.36, decay: sustain * 0.7 },
+      { ratio: 2.84, gain: 0.3, decay: sustain * 0.56 },
+      { ratio: 3.66, gain: 0.24, decay: sustain * 0.42 },
+      { ratio: 4.52, gain: 0.18, decay: sustain * 0.28 },
+      { ratio: 5.75, gain: 0.12, decay: sustain * 0.18 },
     ];
 
     partials.forEach(({ ratio, gain, decay }) => {
@@ -133,7 +133,7 @@ class SoundEngine {
       osc.stop(startTime + decay + 0.04);
     });
 
-    // Metallic FM "clang" burst on hammer impact
+    // Bright metallic FM "clang" burst on hammer impact
     const carrier = ctx.createOscillator();
     const modulator = ctx.createOscillator();
     const modGain = ctx.createGain();
@@ -141,13 +141,13 @@ class SoundEngine {
 
     carrier.type = 'sine';
     modulator.type = 'sine';
-    carrier.frequency.setValueAtTime(1320, startTime);
-    modulator.frequency.setValueAtTime(2040, startTime);
-    modGain.gain.setValueAtTime(2200, startTime);
-    modGain.gain.exponentialRampToValueAtTime(50, startTime + 0.12);
+    carrier.frequency.setValueAtTime(1850, startTime);
+    modulator.frequency.setValueAtTime(2850, startTime);
+    modGain.gain.setValueAtTime(2800, startTime);
+    modGain.gain.exponentialRampToValueAtTime(80, startTime + 0.13);
 
-    fmEnv.gain.setValueAtTime(0.6, startTime);
-    fmEnv.gain.exponentialRampToValueAtTime(0.0001, startTime + 0.16);
+    fmEnv.gain.setValueAtTime(0.85, startTime);
+    fmEnv.gain.exponentialRampToValueAtTime(0.0001, startTime + 0.17);
 
     modulator.connect(modGain);
     modGain.connect(carrier.frequency);
@@ -156,19 +156,19 @@ class SoundEngine {
 
     modulator.start(startTime);
     carrier.start(startTime);
-    modulator.stop(startTime + 0.18);
-    carrier.stop(startTime + 0.18);
+    modulator.stop(startTime + 0.19);
+    carrier.stop(startTime + 0.19);
 
-    // Crisp metal-on-metal impact transient
+    // Sharp metal-on-metal impact transient
     const noiseSrc = ctx.createBufferSource();
     noiseSrc.buffer = this.getNoiseBuffer(ctx);
     const bp = ctx.createBiquadFilter();
     bp.type = 'bandpass';
-    bp.frequency.setValueAtTime(3200, startTime);
-    bp.Q.setValueAtTime(1.5, startTime);
+    bp.frequency.setValueAtTime(4400, startTime);
+    bp.Q.setValueAtTime(1.8, startTime);
 
     const impactGain = ctx.createGain();
-    impactGain.gain.setValueAtTime(0.8, startTime);
+    impactGain.gain.setValueAtTime(1.0, startTime);
     impactGain.gain.exponentialRampToValueAtTime(0.0001, startTime + 0.035);
 
     noiseSrc.connect(bp);
@@ -180,7 +180,7 @@ class SoundEngine {
   }
 
   /**
-   * Boxing ring bell for Fight Start ("ROLA!") — loud single heavy strike
+   * Boxing ring bell for Fight Start ("ROLA!") — very loud, high-pitched single heavy strike
    */
   public playFightStartGong(muted: boolean): void {
     if (muted) return;
@@ -188,7 +188,7 @@ class SoundEngine {
     if (!ctx) return;
 
     const now = ctx.currentTime;
-    this.triggerBoxingBellStrike(ctx, now, 2.35, 0.95);
+    this.triggerBoxingBellStrike(ctx, now, 2.45, 1.6);
   }
 
   /**
@@ -271,75 +271,48 @@ class SoundEngine {
   }
 
   /**
-   * Louder, high-pitched bomb-style tick played every second during Rest ("Descanso")
+   * Base sound pulse generator shared between Rest Tick and Countdown Tick
    */
-  public playRestTick(muted: boolean): void {
-    if (muted) return;
-    const ctx = this.getContext();
-    if (!ctx) return;
-
-    const out = this.getOutputNode(ctx);
-    const now = ctx.currentTime;
-
-    // Sharp high-pitched metallic/electronic bomb-tick tone
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.type = 'square';
-    osc.frequency.setValueAtTime(2250, now);
-    osc.frequency.exponentialRampToValueAtTime(1450, now + 0.045);
-
-    gain.gain.setValueAtTime(0.0001, now);
-    gain.gain.linearRampToValueAtTime(0.32, now + 0.0015);
-    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.055);
-
-    osc.connect(gain);
-    gain.connect(out);
-    osc.start(now);
-    osc.stop(now + 0.06);
-
-    // Crisp high-frequency transient snap ("tic")
-    const noise = ctx.createBufferSource();
-    noise.buffer = this.getNoiseBuffer(ctx);
-    const hp = ctx.createBiquadFilter();
-    hp.type = 'highpass';
-    hp.frequency.setValueAtTime(2600, now);
-
-    const nGain = ctx.createGain();
-    nGain.gain.setValueAtTime(0.28, now);
-    nGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.018);
-
-    noise.connect(hp);
-    hp.connect(nGain);
-    nGain.connect(out);
-    noise.start(now);
-    noise.stop(now + 0.025);
-  }
-
-  /**
-   * Crisp final 3-2-1 countdown pip before round transition
-   */
-  public playCountdownTick(muted: boolean): void {
-    if (muted) return;
-    const ctx = this.getContext();
-    if (!ctx) return;
-
+  private triggerPipTone(ctx: AudioContext, frequency: number, volume = 0.45): void {
     const out = this.getOutputNode(ctx);
     const now = ctx.currentTime;
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
 
     osc.type = 'triangle';
-    osc.frequency.setValueAtTime(1240, now);
+    osc.frequency.setValueAtTime(frequency, now);
 
     gain.gain.setValueAtTime(0.0001, now);
-    gain.gain.linearRampToValueAtTime(0.45, now + 0.002);
-    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.11);
+    gain.gain.linearRampToValueAtTime(volume, now + 0.002);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.09);
 
     osc.connect(gain);
     gain.connect(out);
 
     osc.start(now);
-    osc.stop(now + 0.12);
+    osc.stop(now + 0.1);
+  }
+
+  /**
+   * Louder per-second rest tick — uses the exact same synth voice as countdown tick, tuned to a high pitch (1680 Hz)
+   */
+  public playRestTick(muted: boolean): void {
+    if (muted) return;
+    const ctx = this.getContext();
+    if (!ctx) return;
+
+    this.triggerPipTone(ctx, 1680, 0.42);
+  }
+
+  /**
+   * Crisp final 3-2-1 countdown pip before round transition — tuned to a medium-low pitch (980 Hz)
+   */
+  public playCountdownTick(muted: boolean): void {
+    if (muted) return;
+    const ctx = this.getContext();
+    if (!ctx) return;
+
+    this.triggerPipTone(ctx, 980, 0.55);
   }
 
   /**
@@ -351,9 +324,9 @@ class SoundEngine {
     if (!ctx) return;
 
     const now = ctx.currentTime;
-    this.triggerBoxingBellStrike(ctx, now, 0.65, 0.85);
-    this.triggerBoxingBellStrike(ctx, now + 0.18, 0.65, 0.88);
-    this.triggerBoxingBellStrike(ctx, now + 0.36, 1.9, 0.96);
+    this.triggerBoxingBellStrike(ctx, now, 0.65, 1.35);
+    this.triggerBoxingBellStrike(ctx, now + 0.18, 0.65, 1.45);
+    this.triggerBoxingBellStrike(ctx, now + 0.36, 1.9, 1.6);
   }
 
   /**
@@ -365,10 +338,10 @@ class SoundEngine {
     if (!ctx) return;
 
     const now = ctx.currentTime;
-    this.triggerBoxingBellStrike(ctx, now, 0.55, 0.85);
-    this.triggerBoxingBellStrike(ctx, now + 0.16, 0.55, 0.88);
-    this.triggerBoxingBellStrike(ctx, now + 0.32, 0.55, 0.92);
-    this.triggerBoxingBellStrike(ctx, now + 0.48, 2.5, 1.0);
+    this.triggerBoxingBellStrike(ctx, now, 0.55, 1.35);
+    this.triggerBoxingBellStrike(ctx, now + 0.16, 0.55, 1.45);
+    this.triggerBoxingBellStrike(ctx, now + 0.32, 0.55, 1.5);
+    this.triggerBoxingBellStrike(ctx, now + 0.48, 2.5, 1.65);
   }
 }
 
