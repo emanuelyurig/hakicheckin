@@ -24,8 +24,10 @@ import {
 import { soundEngine } from '../../assets/soundEngine';
 
 type PresetId = 'sparring' | 'drill' | 'hiit' | 'custom';
-type TimerPhase = 'work' | 'rest';
+type TimerPhase = 'prep' | 'work' | 'rest';
 type TimerStatus = 'idle' | 'running' | 'paused' | 'completed';
+
+const PREP_SECONDS = 5;
 
 interface TimerConfig {
   workSeconds: number;
@@ -175,6 +177,17 @@ export default function JiuJitsuTimerPage() {
 
     lastSecondTriggeredRef.current = null;
 
+    if (curPhase === 'prep') {
+      // Preparation finished -> Start Round 1 Fight
+      setPhase('work');
+      phaseRef.current = 'work';
+      remainingMsRef.current = cfg.workSeconds * 1000;
+      targetEndMsRef.current = Date.now() + cfg.workSeconds * 1000;
+      setTimeLeft(cfg.workSeconds);
+      soundEngine.playFightStartGong(muted);
+      return;
+    }
+
     if (curPhase === 'work') {
       if (curRound >= cfg.rounds) {
         // Final round completed -> Workout Finished
@@ -249,7 +262,11 @@ export default function JiuJitsuTimerPage() {
             const cfg = configRef.current;
             const muted = mutedRef.current;
 
-            if (phaseRef.current === 'work') {
+            if (phaseRef.current === 'prep') {
+              if (nextSeconds <= PREP_SECONDS && nextSeconds >= 1) {
+                soundEngine.playCountdownTick(muted);
+              }
+            } else if (phaseRef.current === 'work') {
               if (cfg.tenSecondAlert && nextSeconds === 10 && cfg.workSeconds > 10) {
                 soundEngine.playTenSecondsAlert(muted);
               } else if (nextSeconds <= 3 && nextSeconds >= 1) {
@@ -278,14 +295,16 @@ export default function JiuJitsuTimerPage() {
   const handleStartPause = useCallback(() => {
     soundEngine.unlock();
 
-    if (status === 'idle') {
-      remainingMsRef.current = config.workSeconds * 1000;
-      lastSecondTriggeredRef.current = null;
-      setPhase('work');
+    if (status === 'idle' || status === 'completed') {
+      remainingMsRef.current = PREP_SECONDS * 1000;
+      lastSecondTriggeredRef.current = PREP_SECONDS;
+      phaseRef.current = 'prep';
+      roundRef.current = 1;
+      setPhase('prep');
       setCurrentRound(1);
-      setTimeLeft(config.workSeconds);
+      setTimeLeft(PREP_SECONDS);
       setStatus('running');
-      soundEngine.playFightStartGong(isMuted);
+      soundEngine.playCountdownTick(isMuted);
     } else if (status === 'running') {
       const remaining = Math.max(0, targetEndMsRef.current - Date.now());
       remainingMsRef.current = remaining;
@@ -294,21 +313,15 @@ export default function JiuJitsuTimerPage() {
     } else if (status === 'paused') {
       lastSecondTriggeredRef.current = null;
       setStatus('running');
-    } else if (status === 'completed') {
-      remainingMsRef.current = config.workSeconds * 1000;
-      lastSecondTriggeredRef.current = null;
-      setPhase('work');
-      setCurrentRound(1);
-      setTimeLeft(config.workSeconds);
-      setStatus('running');
-      soundEngine.playFightStartGong(isMuted);
     }
-  }, [status, config.workSeconds, isMuted]);
+  }, [status, isMuted]);
 
   const handleReset = useCallback(() => {
     clearTimerInterval();
     lastSecondTriggeredRef.current = null;
     remainingMsRef.current = config.workSeconds * 1000;
+    phaseRef.current = 'work';
+    roundRef.current = 1;
     setStatus('idle');
     setPhase('work');
     setCurrentRound(1);
@@ -321,6 +334,8 @@ export default function JiuJitsuTimerPage() {
 
     if (status === 'completed') {
       remainingMsRef.current = config.workSeconds * 1000;
+      phaseRef.current = 'work';
+      roundRef.current = config.rounds;
       setStatus('paused');
       setPhase('work');
       setCurrentRound(config.rounds);
@@ -328,9 +343,19 @@ export default function JiuJitsuTimerPage() {
       return;
     }
 
+    if (phase === 'prep') {
+      remainingMsRef.current = PREP_SECONDS * 1000;
+      targetEndMsRef.current = Date.now() + PREP_SECONDS * 1000;
+      lastSecondTriggeredRef.current = PREP_SECONDS;
+      setTimeLeft(PREP_SECONDS);
+      if (status === 'running') soundEngine.playCountdownTick(isMuted);
+      return;
+    }
+
     if (phase === 'rest') {
       remainingMsRef.current = config.workSeconds * 1000;
       targetEndMsRef.current = Date.now() + config.workSeconds * 1000;
+      phaseRef.current = 'work';
       setPhase('work');
       setTimeLeft(config.workSeconds);
       if (status === 'running') soundEngine.playFightStartGong(isMuted);
@@ -340,6 +365,8 @@ export default function JiuJitsuTimerPage() {
     const prevRound = Math.max(1, currentRound - 1);
     remainingMsRef.current = config.workSeconds * 1000;
     targetEndMsRef.current = Date.now() + config.workSeconds * 1000;
+    phaseRef.current = 'work';
+    roundRef.current = prevRound;
     setCurrentRound(prevRound);
     setPhase('work');
     setTimeLeft(config.workSeconds);
@@ -352,10 +379,23 @@ export default function JiuJitsuTimerPage() {
 
     if (status === 'completed') return;
 
+    if (phase === 'prep') {
+      // Skip prep directly into Round 1
+      remainingMsRef.current = config.workSeconds * 1000;
+      targetEndMsRef.current = Date.now() + config.workSeconds * 1000;
+      phaseRef.current = 'work';
+      setPhase('work');
+      setTimeLeft(config.workSeconds);
+      if (status === 'running') soundEngine.playFightStartGong(isMuted);
+      return;
+    }
+
     if (currentRound < config.rounds) {
       const nextRound = currentRound + 1;
       remainingMsRef.current = config.workSeconds * 1000;
       targetEndMsRef.current = Date.now() + config.workSeconds * 1000;
+      phaseRef.current = 'work';
+      roundRef.current = nextRound;
       setCurrentRound(nextRound);
       setPhase('work');
       setTimeLeft(config.workSeconds);
@@ -371,7 +411,7 @@ export default function JiuJitsuTimerPage() {
       setStatus('completed');
       soundEngine.playWorkoutComplete(isMuted);
     }
-  }, [status, currentRound, config.rounds, config.workSeconds, clearTimerInterval, isMuted]);
+  }, [status, phase, currentRound, config.rounds, config.workSeconds, clearTimerInterval, isMuted]);
 
   // Preset & Configuration handlers
   const applyPreset = useCallback(
@@ -395,6 +435,8 @@ export default function JiuJitsuTimerPage() {
       setActivePreset(presetId);
       setConfig(nextConfig);
       remainingMsRef.current = nextConfig.workSeconds * 1000;
+      phaseRef.current = 'work';
+      roundRef.current = 1;
       setStatus('idle');
       setPhase('work');
       setCurrentRound(1);
@@ -420,6 +462,8 @@ export default function JiuJitsuTimerPage() {
       configRef.current = normalized;
       setConfig(normalized);
       remainingMsRef.current = Math.max(5, normalized.workSeconds) * 1000;
+      phaseRef.current = 'work';
+      roundRef.current = 1;
       setStatus('idle');
       setPhase('work');
       setCurrentRound(1);
@@ -484,7 +528,13 @@ export default function JiuJitsuTimerPage() {
   const restMins = Math.floor(config.restSeconds / 60);
   const restSecs = config.restSeconds % 60;
 
-  const currentPhaseDuration = phase === 'work' ? config.workSeconds : Math.max(1, config.restSeconds);
+  const currentPhaseDuration =
+    phase === 'prep'
+      ? PREP_SECONDS
+      : phase === 'work'
+      ? config.workSeconds
+      : Math.max(1, config.restSeconds);
+
   const phaseProgress =
     status === 'completed'
       ? 1
@@ -496,6 +546,8 @@ export default function JiuJitsuTimerPage() {
 
   const calculateElapsedWorkoutSeconds = (): number => {
     if (status === 'completed') return totalWorkoutSeconds;
+    if (phase === 'prep') return 0;
+
     const completedFullRounds = currentRound - 1;
     const priorSeconds =
       completedFullRounds * (config.workSeconds + config.restSeconds);
@@ -533,7 +585,9 @@ export default function JiuJitsuTimerPage() {
     }
     if (status === 'paused') {
       return {
-        label: `PAUSADO · ${phase === 'work' ? 'EM LUTA' : 'DESCANSO'}`,
+        label: `PAUSADO · ${
+          phase === 'prep' ? 'PREPARO' : phase === 'work' ? 'EM LUTA' : 'DESCANSO'
+        }`,
         subLabel: 'Toque em Retomar para continuar o relógio',
         containerClass: 'bg-amber-950/20 border-amber-500/50 text-amber-400',
         clockClass: 'text-gray-300',
@@ -549,6 +603,16 @@ export default function JiuJitsuTimerPage() {
         clockClass: 'text-white',
         barClass: 'bg-orange-600',
         icon: <Swords className="w-4 h-4 text-orange-600 shrink-0" />,
+      };
+    }
+    if (phase === 'prep') {
+      return {
+        label: 'PREPARE-SE',
+        subLabel: 'O rola começa em instantes...',
+        containerClass: 'bg-amber-950/30 border-amber-500/70 text-amber-400',
+        clockClass: 'text-amber-400',
+        barClass: 'bg-amber-500',
+        icon: <Bell className="w-4 h-4 text-amber-400 shrink-0" />,
       };
     }
     if (phase === 'work') {
@@ -605,8 +669,6 @@ export default function JiuJitsuTimerPage() {
 
         {/* Header */}
         <header className="flex items-center justify-between gap-3 mb-5">
-          
-
           {/* <div className="flex items-center gap-2 shrink-0">
             <button
               type="button"
@@ -1026,7 +1088,9 @@ export default function JiuJitsuTimerPage() {
                 >
                   <div
                     className={`w-10 h-6 rounded-full p-0.5 transition-colors flex items-center shrink-0 ${
-                      config.tenSecondAlert ? 'bg-orange-600 justify-end' : 'bg-[#0A0A0A] border border-[#333] justify-start'
+                      config.tenSecondAlert
+                        ? 'bg-orange-600 justify-end'
+                        : 'bg-[#0A0A0A] border border-[#333] justify-start'
                     }`}
                   >
                     <span className="w-5 h-5 rounded-full bg-white block" />
@@ -1163,6 +1227,8 @@ export default function JiuJitsuTimerPage() {
                 className={`bg-[#1A1A1A] border rounded-2xl px-4 py-6 sm:py-8 text-center transition-colors ${
                   isTenSecondWarning
                     ? 'border-rose-500/70 shadow-[inset_0_0_32px_rgba(244,63,94,0.12)]'
+                    : status === 'running' && phase === 'prep'
+                    ? 'border-amber-500/60 shadow-[inset_0_0_32px_rgba(245,158,11,0.1)]'
                     : status === 'running' && phase === 'work'
                     ? 'border-orange-600/60'
                     : status === 'running' && phase === 'rest'
@@ -1172,12 +1238,12 @@ export default function JiuJitsuTimerPage() {
               >
                 <motion.div
                   animate={
-                    isTenSecondWarning
+                    isTenSecondWarning || (status === 'running' && phase === 'prep')
                       ? { scale: [1, 1.03, 1] }
                       : { scale: 1 }
                   }
                   transition={
-                    isTenSecondWarning
+                    isTenSecondWarning || (status === 'running' && phase === 'prep')
                       ? { repeat: Infinity, duration: 0.85, ease: 'easeInOut' }
                       : { duration: 0.15 }
                   }
@@ -1221,7 +1287,9 @@ export default function JiuJitsuTimerPage() {
                               isDone
                                 ? 'bg-orange-600'
                                 : isCurrent
-                                ? phase === 'rest'
+                                ? phase === 'prep'
+                                  ? 'bg-amber-500/60 border border-amber-400'
+                                  : phase === 'rest'
                                   ? 'bg-sky-500/70 border border-sky-400'
                                   : 'bg-orange-600/45 border border-orange-500'
                                 : 'bg-[#0A0A0A] border border-[#333]'
