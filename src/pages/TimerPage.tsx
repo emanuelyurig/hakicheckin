@@ -628,7 +628,7 @@ useEffect(() => {
     }
     if (status === 'idle') {
       return {
-        label: 'PRONTO PARA O ROLA',
+        label: 'PRONTO PARA INICIAR',
         subLabel: `${config.rounds} rounds · Luta ${formatMMSS(config.workSeconds)} · Descanso ${formatMMSS(config.restSeconds)}`,
         containerClass: 'bg-[#1A1A1A] border-[#333] text-gray-300',
         clockClass: 'text-white',
@@ -639,7 +639,7 @@ useEffect(() => {
     if (phase === 'prep') {
       return {
         label: 'PREPARE-SE',
-        subLabel: 'O rola começa em instantes...',
+        subLabel: 'Começa em instantes...',
         containerClass: 'bg-amber-950/30 border-amber-500/70 text-amber-400',
         clockClass: 'text-amber-400',
         barClass: 'bg-amber-500',
@@ -649,7 +649,7 @@ useEffect(() => {
     if (phase === 'work') {
       if (isTenSecondWarning) {
         return {
-          label: '10 SEGUNDOS PARA ACABAR O ROLA!',
+          label: '10 SEGUNDOS PARA ACABAR!',
           subLabel:
             currentRound < config.rounds
               ? `Prepare-se · Próximo: ${config.restSeconds > 0 ? `Descanso ${formatMMSS(config.restSeconds)}` : `Round ${currentRound + 1}`}`
@@ -661,7 +661,7 @@ useEffect(() => {
         };
       }
       return {
-        label: 'EM LUTA · ROLA',
+        label: 'EM LUTA',
         subLabel:
           currentRound < config.rounds
             ? `Próximo: ${config.restSeconds > 0 ? `Descanso ${formatMMSS(config.restSeconds)}` : `Round ${currentRound + 1}`}`
@@ -1131,7 +1131,7 @@ useEffect(() => {
                       Aviso nos últimos 10s
                     </span>
                     <span className="text-[10px] font-bold text-gray-400 block">
-                      Alerta sonoro e visual no fim do rola
+                      Alerta sonoro e visual no fim do treino
                     </span>
                   </div>
                 </button>
@@ -1378,7 +1378,7 @@ useEffect(() => {
                     ) : (
                       <>
                         <Play className="w-5 h-5 fill-current" />
-                        <span>Iniciar Rola</span>
+                        <span>Iniciar</span>
                       </>
                     )}
                   </button>
@@ -1422,7 +1422,7 @@ useEffect(() => {
       </motion.main>
 
       {/* Quiet desktop keyboard hints */}
-      <footer className="hidden md:flex items-center gap-4 mt-5 text-[11px] font-bold tracking-wider uppercase text-gray-500">
+      {/* <footer className="hidden md:flex items-center gap-4 mt-5 text-[11px] font-bold tracking-wider uppercase text-gray-500">
         <span>Espaço: Iniciar / Pausar</span>
         <span aria-hidden="true">·</span>
         <span>R: Reiniciar</span>
@@ -1430,7 +1430,7 @@ useEffect(() => {
         <span>M: Som</span>
         <span aria-hidden="true">·</span>
         <span>← / →: Rounds</span>
-      </footer>
+      </footer> */}
     </div>
   );
 }
