@@ -6,6 +6,7 @@ import { ToastProvider } from './contexts/ToastContext';
 import MainLayout from './layouts/MainLayout';
 import StudentPage from './pages/StudentPage';
 import AdminPage from './pages/AdminPage';
+import TimerPage from './pages/TimerPage';
 
 // Initialize TanStack Query client
 const queryClient = new QueryClient({
@@ -26,6 +27,7 @@ export default function App() {
             <Routes>
               <Route path="/" element={<StudentPage />} />
               <Route path="/admin" element={<AdminPage />} />
+              <Route path="/timer" element={<TimerPage />} />
               {/* Fallback route */}
               <Route path="*" element={<StudentPage />} />
             </Routes>
