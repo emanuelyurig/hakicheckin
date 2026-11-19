@@ -168,6 +168,37 @@ export default function JiuJitsuTimerPage() {
     };
   }, [status]);
 
+  // Pede confirmação antes de atualizar/fechar a página enquanto o timer estiver rodando ou pausado
+useEffect(() => {
+  const isTimerActive = status === 'running' || status === 'paused';
+  if (!isTimerActive) return;
+
+  const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+    e.preventDefault();
+    e.returnValue = ''; // Obrigatório para disparar o alerta nativo do navegador
+  };
+
+  window.addEventListener('beforeunload', handleBeforeUnload);
+
+  return () => {
+    window.removeEventListener('beforeunload', handleBeforeUnload);
+  };
+}, [status]);
+
+// Evita o gesto de "puxar para baixo para atualizar" no celular
+useEffect(() => {
+  const prevHtml = document.documentElement.style.overscrollBehaviorY;
+  const prevBody = document.body.style.overscrollBehaviorY;
+
+  document.documentElement.style.overscrollBehaviorY = 'none';
+  document.body.style.overscrollBehaviorY = 'none';
+
+  return () => {
+    document.documentElement.style.overscrollBehaviorY = prevHtml;
+    document.body.style.overscrollBehaviorY = prevBody;
+  };
+}, []);
+
   // Handle phase/round completion transition cleanly
   const handlePhaseFinish = useCallback(() => {
     const cfg = configRef.current;
