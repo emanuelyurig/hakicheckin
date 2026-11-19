@@ -654,7 +654,7 @@ export default function JiuJitsuTimerPage() {
   const phaseUI = getPhasePresentation();
 
   return (
-    <div className="min-h-screen w-full bg-[#0A0A0A] text-white flex flex-col items-center justify-center p-3 sm:p-6 md:p-8">
+    <div className="min-h-screen w-full bg-[#0A0A0A] text-white flex flex-col items-center mt-3 p-3 sm:p-6 md:p-8">
       <motion.main
         initial={{ opacity: 0, y: 14, scale: 0.985 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
