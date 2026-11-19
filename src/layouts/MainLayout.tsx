@@ -56,7 +56,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
               <span>ALUNO</span>
             </Link>
              <Link
-              to="/"
+              to="/timer"
               className={`px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all duration-200 flex items-center gap-2 ${
                 !isAdmin
                   ? 'bg-orange-600 text-white shadow-lg shadow-orange-950/20'
