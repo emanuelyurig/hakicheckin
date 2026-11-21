@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -6,12 +6,19 @@ import { z } from 'zod';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   PlusCircle, Users, Clock, Calendar, Trophy, Trash2, 
-  FileSpreadsheet, FileText, Ban, Loader2, Sparkles, CheckCircle2, UserCheck
+  FileSpreadsheet, FileText, Ban, Loader2, Sparkles, CheckCircle2, UserCheck,
+  Lock, Eye, EyeOff
 } from 'lucide-react';
 
 import { dbService } from '../services/db';
 import { useToast } from '../contexts/ToastContext';
 import { useRealtime } from '../hooks/useRealtime';
+
+// ==========================================
+// CONFIGURAÇÃO DA SENHA DE ACESSO
+// ==========================================
+const SENHA_ADMIN = 'haki2026'; // <-- Troque a senha padrão aqui
+const AUTH_STORAGE_KEY = 'haki_admin_auth';
 
 // Validation Schema using Zod
 const classSchema = z.object({
@@ -30,7 +37,27 @@ export default function AdminPage() {
   const toast = useToast();
   const queryClient = useQueryClient();
 
-  // 1. Fetch active class
+  // Estado de autenticação do popup
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
+    return sessionStorage.getItem(AUTH_STORAGE_KEY) === 'true';
+  });
+  const [passwordInput, setPasswordInput] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [authError, setAuthError] = useState('');
+
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (passwordInput === SENHA_ADMIN) {
+      sessionStorage.setItem(AUTH_STORAGE_KEY, 'true');
+      setIsAuthenticated(true);
+      setAuthError('');
+      setPasswordInput('');
+    } else {
+      setAuthError('Senha incorreta. Tente novamente.');
+    }
+  };
+
+  // 1. Fetch active class (só executa após autenticado)
   const { 
     data: activeClass, 
     isLoading: isLoadingClass, 
@@ -38,20 +65,21 @@ export default function AdminPage() {
   } = useQuery({
     queryKey: ['activeClass'],
     queryFn: () => dbService.getAulaAtiva(),
+    enabled: isAuthenticated,
   });
 
-  // 2. Fetch presences for the active class (enabled only if activeClass exists)
+  // 2. Fetch presences for the active class (enabled only if authenticated & activeClass exists)
   const { 
     data: presencas = [], 
     isLoading: isLoadingPresencas 
   } = useQuery({
     queryKey: ['presencas', activeClass?.id],
     queryFn: () => dbService.getPresencas(activeClass!.id),
-    enabled: !!activeClass?.id,
+    enabled: isAuthenticated && !!activeClass?.id,
   });
 
   // 3. Setup real-time listeners for updates
-  useRealtime(activeClass?.id);
+  useRealtime(isAuthenticated ? activeClass?.id : undefined);
 
   // 4. Form integration
   const {
@@ -194,6 +222,74 @@ export default function AdminPage() {
     }
     window.print();
   };
+
+  // Popup de bloqueio por senha
+  if (!isAuthenticated) {
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#0A0A0A]/95 backdrop-blur-md p-4">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95, y: 10 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          className="w-full max-w-sm bg-[#111] border-2 border-[#333] rounded-3xl p-7 shadow-2xl"
+        >
+          <div className="flex flex-col items-center text-center mb-6">
+            <div className="w-12 h-12 rounded-2xl bg-orange-600/10 border border-orange-600/30 flex items-center justify-center mb-3">
+              <Lock className="w-6 h-6 text-orange-600" />
+            </div>
+            <h2 className="text-lg font-black text-white uppercase tracking-tight">
+              Acesso Restrito
+            </h2>
+            <p className="text-xs text-gray-400 font-semibold mt-1">
+              Digite a senha de administrador para acessar o painel.
+            </p>
+          </div>
+
+          <form onSubmit={handleLogin} className="space-y-4">
+            <div>
+              <label className="block text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-1.5 ml-1">
+                Senha
+              </label>
+              <div className="relative">
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  value={passwordInput}
+                  onChange={(e) => {
+                    setPasswordInput(e.target.value);
+                    if (authError) setAuthError('');
+                  }}
+                  placeholder="••••••••"
+                  autoFocus
+                  className={`w-full bg-[#0A0A0A] text-white placeholder-zinc-700 rounded-xl pl-4 pr-11 py-3.5 text-sm font-bold border focus:outline-none transition-all ${
+                    authError
+                      ? 'border-orange-500 focus:border-orange-500 focus:ring-1 focus:ring-orange-500'
+                      : 'border-[#333] focus:border-orange-600 focus:ring-1 focus:ring-orange-600'
+                  }`}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300 p-1 cursor-pointer"
+                  tabIndex={-1}
+                >
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
+              {authError && (
+                <p className="mt-1.5 text-xs text-orange-500 font-semibold">{authError}</p>
+              )}
+            </div>
+
+            <button
+              type="submit"
+              className="w-full bg-orange-600 hover:bg-orange-700 text-white font-black py-3.5 px-4 rounded-xl transition-all shadow-md active:scale-98 uppercase tracking-wider text-xs sm:text-sm cursor-pointer"
+            >
+              Entrar no Painel
+            </button>
+          </form>
+        </motion.div>
+      </div>
+    );
+  }
 
   // Statistics
   const totalConfirmados = presencas.length;
