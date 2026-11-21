@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Shield, LayoutDashboard, UserCheck, Timer, Database, Info } from 'lucide-react';
+import { Shield, LayoutDashboard, UserCheck, Timer, Database, Info, Cog } from 'lucide-react';
 import { isMock } from '../lib/supabase';
 import logo from "@/assets/logo.png"; 
 
@@ -54,7 +54,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
               }`}
             >
               <UserCheck className="w-4 h-4" />
-              <span>ALUNO</span>
+              {/* <span>ALUNO</span> */}
             </Link>
              <Link
               to="/timer"
@@ -75,8 +75,8 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
                   : 'text-zinc-400 hover:text-white hover:bg-zinc-900 border border-transparent hover:border-zinc-800'
               }`}
             >
-              <LayoutDashboard className="w-4 h-4 text-orange-500" />
-              <span>ADMIN</span>
+              <Cog className="w-4 h-4 text-orange-500" />
+              {/* <span>ADMIN</span> */}
             </Link> 
           </nav>
         </div>
