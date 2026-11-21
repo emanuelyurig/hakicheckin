@@ -59,7 +59,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
              <Link
               to="/timer"
               className={`px-2 py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all duration-200 flex items-center gap-2 ${
-                !isTimer
+                isTimer
                   ? 'bg-orange-600 text-white shadow-lg shadow-orange-950/20'
                   : 'text-zinc-400 hover:text-white hover:bg-zinc-900 border border-transparent hover:border-zinc-800'
               }`}
