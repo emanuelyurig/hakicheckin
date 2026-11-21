@@ -1278,7 +1278,7 @@ useEffect(() => {
                       ? { repeat: Infinity, duration: 0.85, ease: 'easeInOut' }
                       : { duration: 0.15 }
                   }
-                  className={`font-mono font-black tabular-nums tracking-tight leading-none text-[6.5rem] sm:text-[8.25rem] select-none ${phaseUI.clockClass}`}
+                  className={`font-mono font-black tabular-nums tracking-tight leading-none text-[6.5rem] sm:text-[7.25rem] select-none ${phaseUI.clockClass}`}
                   aria-live="polite"
                 >
                   {formatMMSS(timeLeft)}
