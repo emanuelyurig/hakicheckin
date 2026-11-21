@@ -65,19 +65,21 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
               }`}
             >
               <Timer className="w-4 h-4" />
+                 {/* <span>TIMER</span> */}
             </Link>
-
-             <Link
+              <Link
               to="/admin"
-              className={`px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all duration-200 flex items-center gap-2 ${
+              className={`px-2 py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all duration-200 flex items-center gap-2 ${
                 isAdmin
-                  ? 'bg-[#1A1A1A] text-white border-2 border-[#333]'
+                  ? 'bg-orange-600 text-white shadow-lg shadow-orange-950/20'
                   : 'text-zinc-400 hover:text-white hover:bg-zinc-900 border border-transparent hover:border-zinc-800'
               }`}
             >
-              <Cog className="w-4 h-4 text-orange-500" />
-              {/* <span>ADMIN</span> */}
-            </Link> 
+              <Cog className="w-4 h-4" />
+                  {/* <span>ADMIN</span> */}
+            </Link>
+
+            
           </nav>
         </div>
       </header>
