@@ -91,13 +91,13 @@ export default function JiuJitsuTimerPage() {
   const [status, setStatus] = useState<TimerStatus>('idle');
   const [phase, setPhase] = useState<TimerPhase>('work');
   const [currentRound, setCurrentRound] = useState<number>(1);
-  const [timeLeft, setTimeLeft] = useState<number>(360);
+  const [timeLeft, setTimeLeft] = useState<number>(300);
   const [isMuted, setIsMuted] = useState<boolean>(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false);
 
   // Refs for drift-free interval & audio trigger tracking
   const intervalRef = useRef<number | null>(null);
-  const remainingMsRef = useRef<number>(360 * 1000);
+  const remainingMsRef = useRef<number>(300 * 1000);
   const targetEndMsRef = useRef<number>(0);
   const lastSecondTriggeredRef = useRef<number | null>(null);
   const statusRef = useRef<TimerStatus>(status);
