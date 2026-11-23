@@ -82,9 +82,9 @@ function clamp(val: number, min: number, max: number): number {
 export default function JiuJitsuTimerPage() {
   const [activePreset, setActivePreset] = useState<PresetId>('sparring');
   const [config, setConfig] = useState<TimerConfig>({
-    workSeconds: 360,
+    workSeconds: 300,
     restSeconds: 60,
-    rounds: 5,
+    rounds: 10,
     tenSecondAlert: true,
   });
 
